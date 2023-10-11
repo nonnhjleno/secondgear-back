@@ -1,18 +1,17 @@
 var express = require('express');
 var router = express.Router();
 
-const con = require('./userInfo').con;
+const pool = require('./userInfo').pool;
 const showTables = require('./showTables').getTableNames;
 
 let database = {};
 
-con.connect((err) => {
+pool.getConnection((err, connection) => {
   if (err) throw err;
-  console.log('Connected');
-  const sql = 'show databases;';
-  con.query(sql, (err, result, fields) => {
-    if (err) throw err;
-    database = result;
+  connection.query("show databases", (error, results) => {
+    connection.release();
+    if (error) throw error;
+    database = results;
   });
 });
 
