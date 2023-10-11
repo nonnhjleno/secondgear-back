@@ -39,3 +39,8 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
+
+var server = app.listen(3000, () => {
+  console.log
+    ("Node.js is listening to PORT:" + server.address().port);
+});
