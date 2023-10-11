@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 const con = require('./userInfo').con;
+const showTables = require('./showTables').getTableNames;
 
 /* GET home page. */
 
@@ -17,10 +18,24 @@ con.connect((err) => {
   });
 });
 
+const setHeader = (res,num) => res.setHeader('Access-Control-Allow-Origin', `http://localhost:${num}`);
+
 router
   .get('/', (req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4000/');
+    setHeader(res,4000);
     res.send(database);
+  })
+  .get('/showTables/:name', async (req, res) => {
+    setHeader(res,4000);
+    const databaseName = req.params.name;
+
+    try {
+      const tableNames = await showTables(databaseName);
+      res.send(tableNames);
+    } catch (error) {
+      // エラーハンドリングを追加
+      res.status(500).send('Internal Server Error');
+    }
   });
 
 module.exports = router;
