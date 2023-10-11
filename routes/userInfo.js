@@ -8,4 +8,4 @@ let pool = mysql.createPool({
 
 module.exports = {
    pool, // エクスポートする関数
-};  
+};
