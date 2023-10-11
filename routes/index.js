@@ -4,8 +4,6 @@ var router = express.Router();
 const con = require('./userInfo').con;
 const showTables = require('./showTables').getTableNames;
 
-/* GET home page. */
-
 let database = {};
 
 con.connect((err) => {
@@ -33,7 +31,6 @@ router
       const tableNames = await showTables(databaseName);
       res.send(tableNames);
     } catch (error) {
-      // エラーハンドリングを追加
       res.status(500).send('Internal Server Error');
     }
   });
