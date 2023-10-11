@@ -1,11 +1,11 @@
 const mysql = require('mysql');
 
-let con = mysql.createConnection({
+let pool = mysql.createPool({
     host: 'localhost',
     user: 'user01',
     password: 'user01',
 });
 
 module.exports = {
-   con, // エクスポートする関数
+   pool, // エクスポートする関数
 };  
