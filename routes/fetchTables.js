@@ -9,7 +9,7 @@ const fetchTableNames = async (databaseName) => {
                     reject(error);
                 } else {
                     const tableNames = results.map((row) => Object.values(row)[0]);
-                    console.log(tableNames);
+                    pool.config.connectionConfig.database = null;
                     resolve(tableNames);
                 }
             });
