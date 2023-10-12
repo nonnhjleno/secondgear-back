@@ -48,6 +48,16 @@ router
     } catch (error) {
       res.status(500).send('Internal Server Error');
     }
+  })
+  .post('/createDatabase', (req, res) => {
+    setHeader(res, 4000);
+
+    const databaseName = req.query.name;
+
+    createDatabase(databaseName);
+
+    res.send(databaseName);
+
   });
 
 module.exports = router;
