@@ -1,29 +1,45 @@
 var express = require('express');
 var router = express.Router();
 
-const pool = require('./userInfo').pool;
 const fetchTableNames = require('./fetchTables').fetchTableNames;
+const createDatabase = require('./createDatabase').createDatabse;
 
-let database = {};
-
-pool.getConnection((err, connection) => {
-  if (err) throw err;
-  connection.query("show databases", (error, results) => {
-    connection.release();
-    if (error) throw error;
-    database = results;
+const fetchDatabases = () => {
+  const pool = require('./userInfo').pool;
+  return new Promise((resolve, reject) => {
+    pool.getConnection((err, connection) => {
+      if (err) {
+        connection.release();
+        return reject(err);
+      }
+      connection.query("show databases", (error, results) => {
+        connection.release();
+        if (error) {
+          return reject(error);
+        }
+        return resolve(results);
+      });
+    });
   });
-});
+};
 
-const setHeader = (res,num) => res.setHeader('Access-Control-Allow-Origin', `http://localhost:${num}`);
+
+const setHeader = (res, num) => res.setHeader('Access-Control-Allow-Origin', `http://localhost:${num}`);
 
 router
-  .get('/', (req, res, next) => {
-    setHeader(res,4000);
-    res.send(database);
+  .get('/', async (req, res, next) => {
+    setHeader(res, 4000);
+
+    try {
+      const result = await fetchDatabases(); // データベース一覧を待つ
+      res.send(result); // レスポンスを返す
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Internal Server Error");
+    }
   })
   .get('/showTables/:name', async (req, res) => {
-    setHeader(res,4000);
+    setHeader(res, 4000);
     const databaseName = req.params.name;
 
     try {
