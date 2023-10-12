@@ -1,4 +1,4 @@
-const getTableNames = async (databaseName) => {
+const fetchTableNames = async (databaseName) => {
     return new Promise((resolve, reject) => {
         const pool = require('./userInfo').pool;
         pool.config.connectionConfig.database = databaseName;
@@ -18,5 +18,5 @@ const getTableNames = async (databaseName) => {
 }
 
 module.exports = {
-    getTableNames, // エクスポートする関数
+    fetchTableNames,
 };
