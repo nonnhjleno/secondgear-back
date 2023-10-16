@@ -47,14 +47,14 @@ router
   .get('/showTables/:name', async (req, res) => {
     setHeader(res, 4000);
     const databaseName = req.params.name;
-
+    let result = {};
     try {
-      const tableNames = await fetchTableNames(databaseName);
-      console.log('/showTables');
-      res.send(tableNames);
-    } catch (error) {
+      const response = await fetchTableNames(databaseName);
+      result = response;
+      } catch (error) {
       res.status(500).send('Internal Server Error');
     }
+    res.send(result);
   })
   .post('/createDatabase', (req, res) => {
     setHeader(res, 4000);
