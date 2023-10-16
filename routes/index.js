@@ -1,19 +1,21 @@
 var express = require('express');
+const { compile } = require('morgan');
 var router = express.Router();
+const mysql = require('mysql');
 
 const fetchTableNames = require('./fetchTables').fetchTableNames;
 const createDatabase = require('./createDatabase').createDatabse;
 
 const fetchDatabases = () => {
-  const pool = require('./userInfo').pool;
+  const userInfo = require('./userInfo').userInfo;
+  const con = mysql.createConnection({ ...userInfo });
   return new Promise((resolve, reject) => {
-    pool.getConnection((err, connection) => {
+    con.connect((err) => {
       if (err) {
-        connection.release();
         return reject(err);
       }
-      connection.query("show databases", (error, results) => {
-        connection.release();
+      con.query("show databases", (error, results) => {
+        con.end();
         if (error) {
           return reject(error);
         }
@@ -29,14 +31,18 @@ const setHeader = (res, num) => res.setHeader('Access-Control-Allow-Origin', `ht
 router
   .get('/', async (req, res, next) => {
     setHeader(res, 4000);
-
+    const result = {};
     try {
-      const result = await fetchDatabases(); // データベース一覧を待つ
-      res.send(result); // レスポンスを返す
+      const response = await fetchDatabases();
+      const databaseNames = response.map(databaseInfo => databaseInfo.Database);
+      databaseNames.forEach(name => {
+        result[name] = {};
+      });
     } catch (error) {
       console.error(error);
       res.status(500).send("Internal Server Error");
     }
+    res.send(result);
   })
   .get('/showTables/:name', async (req, res) => {
     setHeader(res, 4000);
@@ -44,6 +50,7 @@ router
 
     try {
       const tableNames = await fetchTableNames(databaseName);
+      console.log('/showTables');
       res.send(tableNames);
     } catch (error) {
       res.status(500).send('Internal Server Error');
@@ -51,11 +58,9 @@ router
   })
   .post('/createDatabase', (req, res) => {
     setHeader(res, 4000);
-
     const databaseName = req.query.name;
-
     createDatabase(databaseName);
-
+    console.log('/createDatabase');
     res.send(databaseName);
 
   });
