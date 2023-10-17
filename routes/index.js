@@ -4,7 +4,7 @@ var router = express.Router();
 const mysql = require('mysql');
 
 const fetchTableNames = require('./fetchTables').fetchTableNames;
-const createDatabase = require('./createDatabase').createDatabse;
+const createDatabase = require('./createDatabase').createDatabase;
 
 const fetchDatabases = () => {
   const userInfo = require('./userInfo').userInfo;
@@ -24,7 +24,6 @@ const fetchDatabases = () => {
     });
   });
 };
-
 
 const setHeader = (res, num) => res.setHeader('Access-Control-Allow-Origin', `http://localhost:${num}`);
 
@@ -59,10 +58,10 @@ router
   .post('/createDatabase', (req, res) => {
     setHeader(res, 4000);
     const databaseName = req.query.name;
-    createDatabase(databaseName);
+    // console.log(databaseName);
+    const result = createDatabase(databaseName);
     console.log('/createDatabase');
-    res.send(databaseName);
-
+    res.send(result);
   });
 
 module.exports = router;

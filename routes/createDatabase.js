@@ -1,18 +1,24 @@
-const pool = require('./userInfo').pool;
+const userInfo = require('./userInfo').userInfo;
 
-const createDatabse = (databaseName) => {
-    pool.getConnection((err, connection) => {
+const createDatabase = (databaseName) => {
+    const mysql = require('mysql');
+    const con = mysql.createConnection({
+        ...userInfo,
+    });
+    con.connect((err) => {
         if (err) throw err;
-        connection.query(`CREATE DATABASE ${databaseName}`, (error, results) => {
+        con.query(`CREATE DATABASE ${databaseName}`, (error, results) => {
+            con.end();
             if (error) {
-                console.error(error);
+                return(error);
             } else {
-                console.log(results);
+                return(results);
             }
         });
     });
+
 };
 
 module.exports = {
-    createDatabse,
+    createDatabase,
 };
