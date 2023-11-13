@@ -50,7 +50,7 @@ router
     try {
       const response = await fetchTableNames(databaseName);
       result = response;
-      } catch (error) {
+    } catch (error) {
       res.status(500).send('Internal Server Error');
     }
     res.send(result);
@@ -62,6 +62,33 @@ router
     const result = createDatabase(databaseName);
     console.log('/createDatabase');
     res.send(result);
+  })
+  .post('/createTable', (req, res) => {
+    setHeader(res, 4000);
+    console.log('/createTable');
+    // console.log(req.body);
+    // const receivedData = req.body;
+
+    console.log(req.body.currentSelectedDatabase);
+
+    // const transformedData = {};
+
+    // // キーを解析して元の形式に変換
+    // Object.keys(receivedData).forEach(key => {
+    //   const match = key.match(/(\d+)\[(\w+)\]/);
+    //   if (match) {
+    //     const index = match[1];
+    //     const field = match[2];
+    //     if (!transformedData[index]) {
+    //       transformedData[index] = {};
+    //     }
+    //     transformedData[index][field] = receivedData[key];
+    //   }
+    // });
+
+    // console.log(transformedData);
+
+    res.send("Success!");
   });
 
 module.exports = router;
