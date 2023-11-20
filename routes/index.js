@@ -66,15 +66,12 @@ router
   .post('/createTable', (req, res) => {
     setHeader(res, 4000);
     console.log('/createTable');
-    // const receivedData = req.body;
     const body = req.body;
     const database = body.currentSelectedDatabase;
     const tableName = body["data[tableName]"];
 
     delete body.currentSelectedDatabase;
     delete body["data[tableName]"];
-
-    console.log(body);
 
     const transformedData = Object.entries(body).reduce((result, [key, value]) => {
       const match = key.match(/data\[(\d+)\]\[column_(\w+)\]/);
