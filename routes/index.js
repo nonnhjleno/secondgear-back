@@ -66,27 +66,28 @@ router
   .post('/createTable', (req, res) => {
     setHeader(res, 4000);
     console.log('/createTable');
-    // console.log(req.body);
     // const receivedData = req.body;
+    const body = req.body;
+    const database = body.currentSelectedDatabase;
+    const tableName = body["data[tableName]"];
 
-    console.log(req.body.currentSelectedDatabase);
+    delete body.currentSelectedDatabase;
+    delete body["data[tableName]"];
 
-    // const transformedData = {};
+    console.log(body);
 
-    // // キーを解析して元の形式に変換
-    // Object.keys(receivedData).forEach(key => {
-    //   const match = key.match(/(\d+)\[(\w+)\]/);
-    //   if (match) {
-    //     const index = match[1];
-    //     const field = match[2];
-    //     if (!transformedData[index]) {
-    //       transformedData[index] = {};
-    //     }
-    //     transformedData[index][field] = receivedData[key];
-    //   }
-    // });
+    const transformedData = Object.entries(body).reduce((result, [key, value]) => {
+      const match = key.match(/data\[(\d+)\]\[column_(\w+)\]/);
+      if (match) {
+        const index = parseInt(match[1]);
+        const columnName = match[2];
+        result[index] = result[index] || {};
+        result[index][columnName] = value;
+      }
+      return result;
+    }, []);
 
-    // console.log(transformedData);
+    console.log(transformedData);
 
     res.send("Success!");
   });
