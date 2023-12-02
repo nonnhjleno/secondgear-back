@@ -5,6 +5,7 @@ const mysql = require('mysql');
 
 const fetchTableNames = require('./fetchTables').fetchTableNames;
 const createDatabase = require('./createDatabase').createDatabase;
+const createTable = require('./createTable').createTable;
 
 const fetchDatabases = () => {
   const userInfo = require('./userInfo').userInfo;
@@ -84,7 +85,7 @@ router
       return result;
     }, []);
 
-    console.log(transformedData);
+    createTable(database, tableName, transformedData);
 
     res.send("Success!");
   });
