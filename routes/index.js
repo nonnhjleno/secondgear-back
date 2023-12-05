@@ -58,7 +58,7 @@ router
   })
   .post('/createDatabase', (req, res) => {
     setHeader(res, 4000);
-    const databaseName = req.query.name;
+    const databaseName = req.body.name;
     // console.log(databaseName);
     const result = createDatabase(databaseName);
     console.log('/createDatabase');
