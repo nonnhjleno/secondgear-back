@@ -3,25 +3,25 @@ const userInfo = require('./userInfo').userInfo;
 const generateCreateTableStatement = (tableName, columns) => {
     let createTableSQL = `CREATE TABLE ${tableName} (`;
 
-    columns.forEach((column, index) => {
-        createTableSQL += `${column.name} ${column.type}`;
+    Object.values(columns).forEach((column, index, array) => {
+        createTableSQL += `${column.column_name} ${column.column_type}`;
 
-        if (column.constraints && column.constraints.length > 0) {
-            createTableSQL += ` ${column.constraints.join(' ')}`;
+        if (index !== array.length - 1) {
+            createTableSQL += ', ';
         }
-
-        createTableSQL += index === columns.length - 1 ? ')' : ', ';
     });
+
+    createTableSQL += ')';
 
     return createTableSQL;
 }
 
-const createTable = (databaseName, tableName, queryData) => {
-    const createTableSQL = generateCreateTableStatement(tableName, queryData);
+const createTable = (queryData) => {
+    const createTableSQL = generateCreateTableStatement(queryData.tableName, queryData.data);
     const mysql = require('mysql');
     const con = mysql.createConnection({
         ...userInfo,
-        database: databaseName
+        database: queryData.currentSelectedDatabase
     });
     con.connect((err) => {
         if (err) throw err;

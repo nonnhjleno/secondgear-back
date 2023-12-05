@@ -68,26 +68,9 @@ router
     setHeader(res, 4000);
     console.log('/createTable');
     const body = req.body;
-    const database = body.currentSelectedDatabase;
-    const tableName = body["data[tableName]"];
-
-    delete body.currentSelectedDatabase;
-    delete body["data[tableName]"];
-
-    const transformedData = Object.entries(body).reduce((result, [key, value]) => {
-      const match = key.match(/data\[(\d+)\]\[column_(\w+)\]/);
-      if (match) {
-        const index = parseInt(match[1]);
-        const columnName = match[2];
-        result[index] = result[index] || {};
-        result[index][columnName] = value;
-      }
-      return result;
-    }, []);
-
-    createTable(database, tableName, transformedData);
-
-    res.send("Success!");
+    const queryData = JSON.parse(Object.keys(body)[0]);
+    createTable(queryData);
+    res.send({result:"Success"});
   });
 
 module.exports = router;
