@@ -4,8 +4,9 @@ const generateCreateTableStatement = (tableName, columns) => {
     let createTableSQL = `CREATE TABLE IF NOT EXISTS ${tableName} (`;
 
     Object.values(columns).forEach((column, index, array) => {
-        createTableSQL += `${column.column_name} ${column.column_type}`;
-        
+        const not_null = column.not_null === 'true' ? 'NOT NULL' : '';
+        createTableSQL += `${column.column_name} ${column.column_type} ${not_null}`;
+
         if (index !== array.length - 1) {
             createTableSQL += ', ';
         }
