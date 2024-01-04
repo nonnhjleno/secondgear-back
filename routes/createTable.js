@@ -1,11 +1,11 @@
 const userInfo = require('./userInfo').userInfo;
 
 const generateCreateTableStatement = (tableName, columns) => {
-    let createTableSQL = `CREATE TABLE ${tableName} (`;
+    let createTableSQL = `CREATE TABLE IF NOT EXISTS ${tableName} (`;
 
     Object.values(columns).forEach((column, index, array) => {
         createTableSQL += `${column.column_name} ${column.column_type}`;
-
+        
         if (index !== array.length - 1) {
             createTableSQL += ', ';
         }
